@@ -463,7 +463,9 @@
    "max_results": 25,
    "video_require": "\\bnexa\\b[\\s\\S]{0,200}\\b(?:Bitcoin Unlimited|Andrew Stone|Andrew Clifford|Peter Rizun|Andrea Suisani|David Thibodeau|Tailstorm|Otoplo|Wally|UTXO|proof[- ]of[- ]work|PoW|Kaspa|BCH|Bitcoin Cash|halving|NexaPow|smart contracts?|native tokens?|TOKEN ?2049|Bitcoin MENA|layer[- ]1|L1|full node|mining (?:pool|rig|cost)|GPU mining|tokedex|tokadex|NexScript)\\b|\\b(?:Bitcoin Unlimited|Andrew Stone|Andrew Clifford|Peter Rizun|Andrea Suisani|David Thibodeau|Tailstorm|Otoplo|Wally|UTXO|proof[- ]of[- ]work|PoW|Kaspa|BCH|Bitcoin Cash|halving|NexaPow|smart contracts?|native tokens?|TOKEN ?2049|Bitcoin MENA|layer[- ]1|L1|full node|mining (?:pool|rig|cost)|GPU mining|tokedex|tokadex|NexScript)\\b[\\s\\S]{0,200}\\bnexa\\b",
    "video_exclude": "mining app|free (?:crypto )?mining|airdrop|metamask|contract address|\\bBEP-?20\\b|\\bBSC\\b|pancake ?swap|\\bNXA\\b|Nxawallet|NexaWallet|Nexa ?Global|Nexa ?Cosmic|Nexa[- ]?trade|Nexa Mortgage|Nexa AI|Nexa Web Trading|Nexora|sidra|MST blockchain|Bytnex|Zulti|withdraw(?:al)? proof|earning app|online earning|passive income app|pay bills|recharge|\\bFWT\\b|Future World Token|Nexa Unlimited|NEXAPOOL|Mining Project|Mining Opportunity|\\bNXC\\b|Nexa Coin \\(NXC\\)",
-   "own_channel_ids": [],
+   "own_channel_ids": [
+    "UCbSNdS0vwuoZdQTIDl2pcmw"
+   ],
    "trusted_channel_ids": [
     "UCv1KKb4kHo1seS5DPXrCFEQ"
    ]
