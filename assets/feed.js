@@ -6,7 +6,8 @@
   var segs = [].slice.call(document.querySelectorAll('[data-cat]'));
   var q = document.getElementById('q'), count = document.getElementById('count');
   function chosen() { return chips.filter(function (c) { return c.getAttribute('aria-pressed') === 'true'; }).map(function (c) { return c.dataset.platform; }); }
-  function cat() { var s = segs.filter(function (b) { return b.getAttribute('aria-pressed') === 'true'; })[0]; return s ? s.dataset.cat : ''; }
+  function cat() { var s = segs.filter(function (b) { return b.getAttribute('aria-pressed') === 'true'; })[0]; return s && s.dataset.cat !== 'all' ? s.dataset.cat : ''; }
+  var DEFAULT = (segs.filter(function (b) { return b.getAttribute('aria-pressed') === 'true'; })[0] || {dataset: {cat: 'all'}}).dataset.cat;
   function apply(save) {
     var p = chosen(), c = cat(), text = (q.value || '').trim().toLowerCase(), n = 0;
     items.forEach(function (li) {
@@ -16,7 +17,7 @@
     count.textContent = n + (n === 1 ? ' item' : ' items');
     if (save) {
       var h = new URLSearchParams();
-      if (p.length) h.set('platform', p.join(',')); if (c) h.set('category', c); if (text) h.set('q', text);
+      var cc = (segs.filter(function (b) { return b.getAttribute('aria-pressed') === 'true'; })[0] || {dataset: {}}).dataset.cat; if (p.length) h.set('platform', p.join(',')); if (cc && cc !== DEFAULT) h.set('category', cc); if (text) h.set('q', text);
       history.replaceState(null, '', h.toString() ? '#' + h.toString() : location.pathname + location.search);
     }
   }
