@@ -444,7 +444,8 @@ def write_queue(store):
         if i["status"] != "pending": continue
         q["pending"].append({"id": i["id"], "title": i["title"], "author": i.get("author"), "platform": i["platform"], "category": i["category"],
                              "source": i["source_name"], "url": i["url"], "published": i["published"], "flags": i["flags"], "match": i.get("match"),
-                             "teaser_local_only": store.teasers.get(i["id"], "")})
+                             "teaser_local_only": store.teasers.get(i["id"], ""),
+                             **({"editor_note_local_only": i["editor_note"]} if i.get("editor_note") else {})})
     write_json(path("queue", "review.json"), q)
     return q
 
