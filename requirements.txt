@@ -1,0 +1,8 @@
+feedparser
+requests
+beautifulsoup4
+lxml
+markdown
+# QA screenshots only:
+playwright
+pillow

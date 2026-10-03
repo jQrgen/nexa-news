@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Office screen – Nexa News</title><meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f766e'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3EN%3C/text%3E%3C/svg%3E">
+<style>
+:root{--bg:#071311;--panel:#0d1f1c;--ink:#ecfdf5;--mut:#9fb8b2;--line:#1f3a35;--acc:#2dd4bf;--ind:#c4b5fd;--warn:#fbbf24}
+body.light{--bg:#f8fafc;--panel:#fff;--ink:#0f172a;--mut:#475569;--line:#e2e8f0;--acc:#0f766e;--ind:#6d28d9;--warn:#b45309}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font:400 clamp(14px,1.15vw,30px)/1.35 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+body.idle,body.idle *{cursor:none!important}
+a{color:inherit;text-decoration:none}
+.app{height:100vh;display:grid;gap:1.4vmin;padding:1.8vmin}
+header{display:flex;align-items:center;gap:1.6em;border-bottom:.4vmin solid var(--acc);padding-bottom:1vmin;min-width:0}
+.brand{display:flex;align-items:center;gap:.5em;font-weight:800;font-size:2.1em;letter-spacing:-.02em;white-space:nowrap}
+.logo{width:1.25em;height:1.25em;border-radius:.25em;background:var(--acc);color:var(--bg);display:inline-flex;align-items:center;justify-content:center;font-size:.85em}
+.sub{color:var(--mut);font-size:.9em;line-height:1.25}
+.ctl{display:flex;gap:.5em;margin-left:auto}
+.ctl button,.ctl a{font:inherit;font-size:.75em;background:transparent;color:var(--mut);border:1px solid var(--line);border-radius:.4em;padding:.3em .7em;cursor:pointer;white-space:nowrap}
+.time{text-align:right;white-space:nowrap}.clock{font-weight:800;font-size:2.3em;font-variant-numeric:tabular-nums;line-height:1}.date{color:var(--mut);font-size:.95em}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:1vmin;padding:1.6vmin 2vmin;min-height:0;min-width:0;display:flex;flex-direction:column;overflow:hidden}
+.panel h2{margin:0 0 .5em;font-size:.95em;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);display:flex;gap:.6em;align-items:baseline}
+.panel h2 small{color:var(--mut);letter-spacing:0;text-transform:none;font-weight:400;margin-left:auto;font-size:.9em}
+ol{list-style:none;margin:0;padding:0;flex:1;min-height:0;overflow:hidden;transition:opacity .5s}
+#news li{padding:.7em 0;border-bottom:1px solid var(--line)}
+#news .t{font-weight:750;font-size:1.5em;line-height:1.2}
+.m{color:var(--mut);font-size:.9em;margin:.3em 0 .2em}.m b{color:var(--ink);font-weight:650}
+.s{font-size:1.08em;max-width:70ch}.s.wait{color:var(--mut);font-style:italic}
+.pf{font-size:.75em;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acc)}
+.b{display:inline-block;font-size:.72em;border:1px solid var(--line);border-radius:1em;padding:0 .55em;margin-left:.4em;color:var(--mut);vertical-align:.1em}
+.b.ind{color:var(--ind);border-color:currentColor}.b.p{color:var(--warn);border-color:currentColor}
+.small li{padding:.5em 0;border-bottom:1px solid var(--line)}.small .t{font-weight:650;font-size:1.05em;line-height:1.25}
+.pager{color:var(--mut);font-size:.8em;margin-top:.5em}
+footer{display:flex;flex-wrap:wrap;gap:.4em 1.6em;color:var(--mut);font-size:.78em}
+@media (orientation:landscape){
+  .app{grid-template-columns:1.9fr 1fr;grid-template-rows:auto minmax(0,1fr) minmax(0,1fr) auto}
+  header,footer{grid-column:1/-1}#pNews{grid-row:2/4}
+}
+@media (orientation:portrait){
+  html,body{font-size:clamp(14px,2vw,34px)}
+  .app{grid-template-columns:1fr 1fr;grid-template-rows:auto minmax(0,1.9fr) minmax(0,1fr) auto}
+  header,footer{grid-column:1/-1}#pNews{grid-column:1/-1}
+  .ctl{display:none}body:hover .ctl{display:flex}
+  header .sub{display:none}
+}
+</style></head>
+<body>
+<div class="app">
+<header><div class="brand"><span class="logo" aria-hidden="true">N</span>Nexa News</div>
+<div class="sub">Everything public about Nexa<br>nexa.org · forum · GitLab · Medium · news</div>
+<div class="ctl"><button id="fs" type="button">Full screen</button><button id="theme" type="button">Light</button><a href="../">Website</a></div>
+<div class="time"><div class="clock" id="clock">--:--</div><div class="date" id="date"></div></div></header>
+<section class="panel" id="pNews" aria-live="polite"><h2>Latest <small id="pager"></small></h2><ol id="news"></ol></section>
+<section class="panel" id="pInd"><h2>Independent coverage</h2><ol class="small" id="ind"></ol></section>
+<section class="panel" id="pRel"><h2>Releases</h2><ol class="small" id="rel"></ol></section>
+<footer><span id="upd">Loading …</span><span>AI-assisted, editor-reviewed, run by jQrgen, who works on Nexa with Bitcoin Unlimited.</span><span>Not investment advice. No tracking.</span></footer>
+</div>
+<script>
+(function () {
+  var PREVIEW = __PREVIEW__, ROTATE = 12000, REFRESH = 5 * 60 * 1000, TZ = 'Europe/Oslo';
+  var LABEL = {forum: 'Forum', blog: 'nexa.org', gitlab: 'GitLab', medium: 'Medium', news: 'News', mastodon: 'Mastodon', x: 'X', reddit: 'Reddit', youtube: 'YouTube', podcast: 'Podcast', web: 'Web'};
+  var news = [], rel = [], start = 0, shownN = 0;
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); }
+  function day(iso) { return new Date(iso).toLocaleDateString('en-GB', {timeZone: TZ, day: 'numeric', month: 'short'}); }
+  function tick() {
+    var d = new Date();
+    $('clock').textContent = d.toLocaleTimeString('en-GB', {timeZone: TZ, hour: '2-digit', minute: '2-digit'});
+    $('date').textContent = d.toLocaleDateString('en-GB', {timeZone: TZ, weekday: 'long', day: 'numeric', month: 'long'});
+  }
+  function fit(ol) { var li = [].slice.call(ol.children); for (var k = li.length - 1; k > 0 && ol.scrollHeight > ol.clientHeight + 2; k--) li[k].remove(); return ol.children.length; }
+  function badges(i) { return (i.category === 'independent' ? '<span class="b ind">Independent</span>' : '<span class="b">Official</span>') + (i.status === 'pending' ? '<span class="b p">Pending review</span>' : ''); }
+  // Show as many items as fit, then continue from the next one on the following page (nothing is skipped).
+  function drawNews(next) {
+    var ol = $('news');
+    if (next) start += shownN;
+    if (start >= news.length) start = 0;
+    ol.style.opacity = 0;
+    setTimeout(function () {
+      ol.innerHTML = news.slice(start, start + 12).map(function (i) {
+        return '<li><div><span class="pf">' + esc(LABEL[i.platform] || i.platform) + '</span>' + badges(i) + '</div><div class="t">' + esc(i.title) + '</div>' +
+          '<div class="m"><b>' + esc(i.author || i.source_name) + '</b> · ' + day(i.published) + '</div>' +
+          (i.summary ? '<div class="s">' + esc(i.summary) + '</div>' : (PREVIEW ? '<div class="s wait">Awaiting editor summary</div>' : '')) + '</li>';
+      }).join('') || '<li>No items yet.</li>';
+      shownN = Math.max(1, fit(ol)); ol.style.opacity = 1;
+      $('pager').textContent = news.length ? 'items ' + (start + 1) + '–' + Math.min(news.length, start + shownN) + ' of ' + news.length : '';
+    }, 350);
+  }
+  function drawSmall(id, list) {
+    var ol = $(id);
+    ol.innerHTML = list.slice(0, 8).map(function (i) {
+      return '<li><div class="t">' + esc(i.title) + '</div><div class="m">' + esc(i.author || i.source_name) + ' · ' + day(i.published) + (i.status === 'pending' ? ' · <span class="b p">Pending</span>' : '') + '</div></li>';
+    }).join('') || '<li class="m">Nothing yet.</li>';
+    fit(ol);
+  }
+  function load() {
+    var t = '?t=' + Date.now();
+    Promise.all([fetch('../data/items.json' + t).then(function (r) { return r.json(); }), fetch('../data/releases.json' + t).then(function (r) { return r.json(); })]).then(function (a) {
+      news = a[0].items || []; rel = a[1].items || [];
+      drawNews(); drawSmall('ind', news.filter(function (i) { return i.category === 'independent'; })); drawSmall('rel', rel);
+      var u = a[0].updated ? new Date(a[0].updated).toLocaleString('en-GB', {timeZone: TZ, day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'}) : 'never';
+      $('upd').textContent = 'Last fetched ' + u + ' (Oslo)' + (PREVIEW ? ' · LOCAL PREVIEW, includes unreviewed items' : '');
+    }).catch(function () { $('upd').textContent = 'Could not load data. Retrying in 5 minutes.'; });
+  }
+  var lock = null;
+  function wake() { if ('wakeLock' in navigator && document.visibilityState === 'visible') navigator.wakeLock.request('screen').then(function (l) { lock = l; }).catch(function () {}); }
+  $('fs').addEventListener('click', function () { var d = document.documentElement; if (!document.fullscreenElement) { (d.requestFullscreen || d.webkitRequestFullscreen).call(d); } else { document.exitFullscreen(); } wake(); });
+  document.addEventListener('visibilitychange', wake);
+  function theme(light) { document.body.classList.toggle('light', light); $('theme').textContent = light ? 'Dark' : 'Light'; try { localStorage.setItem('nn-theme', light ? 'light' : 'dark'); } catch (e) {} }
+  var qs = new URLSearchParams(location.search), saved = null; try { saved = localStorage.getItem('nn-theme'); } catch (e) {}
+  theme(qs.get('theme') ? qs.get('theme') === 'light' : saved === 'light');
+  $('theme').addEventListener('click', function () { theme(!document.body.classList.contains('light')); });
+  var idle; function active() { document.body.classList.remove('idle'); clearTimeout(idle); idle = setTimeout(function () { document.body.classList.add('idle'); }, 3000); }
+  ['mousemove', 'mousedown', 'touchstart', 'keydown'].forEach(function (e) { document.addEventListener(e, active, {passive: true}); }); active();
+  matchMedia('(orientation: portrait)').addEventListener('change', function () { drawNews(); drawSmall('ind', news.filter(function (i) { return i.category === 'independent'; })); drawSmall('rel', rel); });
+  tick(); setInterval(tick, 1000); load(); setInterval(load, REFRESH); wake();
+  setInterval(function () { drawNews(true); }, ROTATE);
+})();
+</script>
+</body></html>

@@ -1,0 +1,17 @@
+{
+ "_about": "Site changes only (pages, sections, source types), newest first. Not daily news items. Rendered at /changelog/.",
+ "entries": [
+  {
+   "date": "2026-10-03",
+   "title": "Nexa News launches",
+   "changes": [
+    "Feed of public Nexa news, forum posts, articles and releases, with filters by platform and by official or independent coverage.",
+    "Release timeline from the public GitLab projects (Nexa full node, Rostrum, libnexakotlin, libnexa-js, Wally Wallet, Otoplo).",
+    "Sources page listing every source, how it is read and whether it works.",
+    "About page with the disclosure, how the site works and the editorial policy.",
+    "Office screen mode for a TV or monitor, portrait or landscape.",
+    "Changelog page (this page)."
+   ]
+  }
+ ]
+}

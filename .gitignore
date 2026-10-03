@@ -1,0 +1,15 @@
+# Working data: stays on the machine, never in the repository
+data/
+state/
+queue/
+logs/
+site/
+shots/
+research/
+publish.conf
+.venv/
+__pycache__/
+*.pyc
+*.tmp
+.env
+*.token
