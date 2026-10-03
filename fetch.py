@@ -102,7 +102,9 @@ def is_relevant(text, mode):
 NON_ENGLISH = re.compile(r"\b(?:não|são|com|para|uma|mercado|cripto|revela|fundos|agora|el|la|los|las|por|del|una|apuesta|escalabilidad|und|der|die|das|mit|für|le|les|des|est|pour|avec|dans)\b|[一-龥가-힣]", re.I)
 def flags_for(text, why=""):
     f = [name for name, rx in FLAGS.items() if rx.search(text)]
-    if len(NON_ENGLISH.findall(text.split("\n")[0])) >= 2: f.append("not-english")
+    first = text.split("\n")[0]
+    if len(NON_ENGLISH.findall(first)) >= 2 or re.search(r"[\u0900-\u097F\u0600-\u06FF]", first) or len(re.findall(r"\b(?:kese|kaise|kare|karen|mein|hai|hain|kya|aur|banaye|lenge|bheje|banay|khole|nayi|se)\b", first, re.I)) >= 2:
+        f.append("not-english")
     if why == "Nexa + crypto context": f.append("ambiguous-nexa")
     return f
 
@@ -322,28 +324,69 @@ def read_github(http, store, s, cutoff):
     return {"ok": ok > 0, "requests": len(s["queries"]), "ok_requests": ok, "entries": entries, "error": err}
 
 def read_youtube_api(http, store, s, cutoff):
-    """Third-party videos via the official YouTube Data API v3 search. Needs YOUTUBE_API_KEY in the environment.
-    No YouTube pages are fetched. Thumbnails are copied to data/thumbs/ (served from our own site) when ytimg.com allows it."""
+    """Third-party videos via the official YouTube Data API v3 (search.list, 100 quota units per call).
+    Needs YOUTUBE_API_KEY in the environment. The key is only sent to googleapis.com; it is never logged, stored or
+    written to data/ or site/. No YouTube pages are fetched and no player is embedded. Thumbnails are copied to
+    data/thumbs/ (served from our own site) when ytimg.com's robots.txt allows it."""
     key = os.environ.get("YOUTUBE_API_KEY")
     if not key: return {"ok": False, "requests": 0, "ok_requests": 0, "entries": 0, "error": "YOUTUBE_API_KEY is not set"}
-    ok = entries = 0; err = None
-    skip = {c.lower() for c in s.get("exclude_channel_ids", [])}
+    ok = entries = units = 0; err = None
+    skip = {c for c in s.get("exclude_channel_ids", [])}          # unrelated channels that happen to be called Nexa
+    official = {c for c in s.get("official_channel_ids", [])}     # official channels: not third-party, left out here
+    seen_vids, report = set(), []
     for q in s["queries"]:
-        params = {"part": "snippet", "type": "video", "q": q, "order": "date", "maxResults": 25, "relevanceLanguage": "en",
-                  "publishedAfter": cutoff.strftime("%Y-%m-%dT%H:%M:%SZ"), "key": key}
+        params = {"part": "snippet", "type": "video", "q": q, "order": "relevance", "maxResults": s.get("max_results", 25),
+                  "publishedAfter": cutoff.strftime("%Y-%m-%dT%H:%M:%SZ"), "safeSearch": "strict"}
         try:
-            r = requests.get("https://www.googleapis.com/youtube/v3/search", params=params, headers={"User-Agent": AGENT}, timeout=30)
-            r.raise_for_status(); d = r.json(); ok += 1
+            r = requests.get("https://www.googleapis.com/youtube/v3/search", params={**params, "key": key},
+                             headers={"User-Agent": AGENT}, timeout=30)
+            units += 100
+            if r.status_code != 200:
+                reason = ((r.json().get("error") or {}).get("errors") or [{}])[0].get("reason", "") if r.headers.get("content-type", "").startswith("application/json") else ""
+                err = f"HTTP {r.status_code} {reason}".strip(); continue
+            d = r.json(); ok += 1
         except Exception as ex:
-            err = f"{type(ex).__name__}"[:200]; continue   # never log the URL: it contains the key
+            err = type(ex).__name__; continue   # never log the exception text: it may contain the request URL with the key
         for v in d.get("items", []):
-            entries += 1; sn = v["snippet"]; vid = v["id"].get("videoId")
-            if not vid or sn.get("channelId", "").lower() in skip: continue
-            when = dt.datetime.fromisoformat(sn["publishedAt"].replace("Z", "+00:00"))
-            item = store.add(url=f"https://www.youtube.com/watch?v={vid}", title=html_unescape(sn.get("title", "")), teaser=html_unescape(sn.get("description", "")),
-                             published=when, source=s, author=sn.get("channelTitle", ""), kind="video", mode=s.get("filter", "strict"), cutoff=cutoff)
-            if item: save_thumb(http, item, (sn.get("thumbnails") or {}).get("medium", {}).get("url"))
-    return {"ok": ok > 0, "requests": len(s["queries"]), "ok_requests": ok, "entries": entries, "error": err}
+            vid = v["id"].get("videoId"); sn = v["snippet"]
+            if not vid or vid in seen_vids: continue
+            seen_vids.add(vid); entries += 1
+            ch = sn.get("channelId", ""); title = html_unescape(sn.get("title", "")); desc = html_unescape(sn.get("description", ""))
+            row = {"video": vid, "title": title, "channel": sn.get("channelTitle", ""), "published": sn.get("publishedAt"), "query": q,
+                   "description_start": desc[:160]}
+            if ch in official: row["result"] = "official channel (left out)"; report.append(row); continue
+            if ch in skip: row["result"] = "unrelated channel"; report.append(row); continue
+            row["channel_id"] = ch
+            verdict = video_verdict(s, title, desc, sn.get("channelTitle", ""), ch)
+            if verdict != "keep": row["result"] = verdict; report.append(row); continue
+            cat = "official" if ch in set(s.get("own_channel_ids", [])) else "independent"
+            item = store.add(url=f"https://www.youtube.com/watch?v={vid}", title=title, teaser=desc,
+                             published=dt.datetime.fromisoformat(sn["publishedAt"].replace("Z", "+00:00")), source=s,
+                             author=sn.get("channelTitle", ""), kind="video", mode="all", cutoff=cutoff, category=cat,
+                             extra={"channel_id": ch, "channel_url": f"https://www.youtube.com/channel/{ch}"})
+            if item:
+                row["result"] = "kept (pending)"; row["flags"] = item["flags"]
+                save_thumb(http, item, (sn.get("thumbnails") or {}).get("medium", {}).get("url"))
+            else:
+                row["result"] = "filtered out or already known"
+            report.append(row)
+    write_json(path("state", "youtube_last_run.json"), {"checked": NOW.isoformat(timespec="seconds"), "quota_units": units, "videos": report})
+    say(f"  youtube-api: {len(s['queries'])} search calls = {units} quota units (daily default quota 10,000)")
+    return {"ok": ok > 0, "requests": len(s["queries"]), "ok_requests": ok, "entries": entries, "error": err, "quota_units": units}
+
+# On YouTube "Nexa coin/wallet/crypto" is also used by look-alike tokens (e.g. NXC) and app scams, so videos need a sharper sign.
+VIDEO_STRONG = re.compile(r"nexa\.org|\bBitcoin Unlimited\b|\bWally ?Wallet\b|\bOtoplo\b|\bRostrum\b|\bVotePeer\b|\bNexScript\b|\blibnexa|"
+                          r"\bNexaPow\b|\bnexajs\b|\bNexa\b[\s\S]{0,300}\bTailstorm\b|\bTailstorm\b[\s\S]{0,300}\bNexa\b", re.I)
+
+def video_verdict(s, title, desc, channel, channel_id=""):
+    """YouTube titles are noisy: 'Nexa' is also a car line, trading scams, a mortgage firm, 'mining apps' and BSC tokens.
+    Keep a video only if it shows a real sign of the Nexa blockchain and none of the known look-alikes."""
+    text = f"{title}\n{desc}\n{channel}"
+    if any(x.search(text) for x in EXCLUDE): return "excluded (known noise)"
+    if re.search(s.get("video_exclude", r"$^"), text, re.I): return "excluded (other Nexa / airdrop / app scam)"
+    if channel_id in set(s.get("trusted_channel_ids", [])) and NEXA_WORD.search(text): return "keep"   # third-party channels the editor has seen cover the real Nexa
+    if VIDEO_STRONG.search(text) or re.search(s.get("video_require", r"$^"), text, re.I): return "keep"
+    return "no clear Nexa blockchain sign"
 
 def html_unescape(t):
     import html as _h; return _h.unescape(t or "")

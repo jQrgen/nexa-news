@@ -441,14 +441,32 @@
    "lookback_days": 365,
    "queries": [
     "Nexa blockchain",
-    "Nexa crypto Tailstorm",
+    "Nexa crypto",
     "NEXA coin",
+    "Nexa Tailstorm",
     "Wally Wallet Nexa",
-    "Bitcoin Unlimited Nexa"
+    "Bitcoin Unlimited Nexa",
+    "Otoplo wallet",
+    "NexaPow mining",
+    "Nexa cryptocurrency review"
    ],
-   "exclude_channel_ids": [],
-   "status": "waiting for a key: uses the official YouTube Data API v3 search and needs YOUTUBE_API_KEY. No YouTube pages are scraped, no player is embedded, thumbnails are copied to our own site.",
-   "verified": "2026-10-03"
+   "exclude_channel_ids": [
+    "UCDut-bFUiPNzI4413ajSOsw",
+    "UCCPdyIdGpQLRWE-2_OKzeOQ"
+   ],
+   "status": "ok: official YouTube Data API v3 search (9 queries = 900 of the default 10,000 daily quota units per run). The official @NexaCoin and Bitcoin Unlimited channels are left out; @NexaOrg (a gaming team) and @nexa are excluded. A video is kept only with a clear Nexa-blockchain sign (Bitcoin Unlimited, Tailstorm, Otoplo, Wally, UTXO, PoW, team names ...) and none of the look-alikes (Nexa mining apps, airdrops, BSC/MetaMask tokens, NexaWallet, Nexa Global, Nexa Trade ...). The editor reviews each one. No player is embedded.",
+   "verified": "2026-10-03",
+   "official_channel_ids": [
+    "UC_VnQHT-xIUEVlP0YaISPqg",
+    "UC2KmYJooP-GtfNUn8MICB_g"
+   ],
+   "max_results": 25,
+   "video_require": "\\bnexa\\b[\\s\\S]{0,200}\\b(?:Bitcoin Unlimited|Andrew Stone|Andrew Clifford|Peter Rizun|Andrea Suisani|David Thibodeau|Tailstorm|Otoplo|Wally|UTXO|proof[- ]of[- ]work|PoW|Kaspa|BCH|Bitcoin Cash|halving|NexaPow|smart contracts?|native tokens?|TOKEN ?2049|Bitcoin MENA|layer[- ]1|L1|full node|mining (?:pool|rig|cost)|GPU mining|tokedex|tokadex|NexScript)\\b|\\b(?:Bitcoin Unlimited|Andrew Stone|Andrew Clifford|Peter Rizun|Andrea Suisani|David Thibodeau|Tailstorm|Otoplo|Wally|UTXO|proof[- ]of[- ]work|PoW|Kaspa|BCH|Bitcoin Cash|halving|NexaPow|smart contracts?|native tokens?|TOKEN ?2049|Bitcoin MENA|layer[- ]1|L1|full node|mining (?:pool|rig|cost)|GPU mining|tokedex|tokadex|NexScript)\\b[\\s\\S]{0,200}\\bnexa\\b",
+   "video_exclude": "mining app|free (?:crypto )?mining|airdrop|metamask|contract address|\\bBEP-?20\\b|\\bBSC\\b|pancake ?swap|\\bNXA\\b|Nxawallet|NexaWallet|Nexa ?Global|Nexa ?Cosmic|Nexa[- ]?trade|Nexa Mortgage|Nexa AI|Nexa Web Trading|Nexora|sidra|MST blockchain|Bytnex|Zulti|withdraw(?:al)? proof|earning app|online earning|passive income app|pay bills|recharge|\\bFWT\\b|Future World Token|Nexa Unlimited|NEXAPOOL|Mining Project|Mining Opportunity|\\bNXC\\b|Nexa Coin \\(NXC\\)",
+   "own_channel_ids": [],
+   "trusted_channel_ids": [
+    "UCv1KKb4kHo1seS5DPXrCFEQ"
+   ]
   },
   {
    "id": "youtube-channel-rss",
