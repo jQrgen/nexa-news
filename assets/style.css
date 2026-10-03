@@ -66,3 +66,6 @@ footer.site{margin-top:44px;border-top:1px solid var(--line);padding:18px 0 34px
 footer.site p{margin:4px 0;max-width:90ch}
 .disclosure{background:#0f172a;color:#e2e8f0;font-size:13px;padding:5px 0}.disclosure a{color:#99f6e4}
 .editor-doc{border-top:1px solid var(--line);margin-top:26px}.editor-doc blockquote{margin:10px 0;padding:8px 14px;border-left:4px solid var(--brand);background:var(--soft)}
+.pf-hn i{background:#ff6600}.pf-devto i{background:#0a0a0a}.pf-github i{background:#24292f}
+.vcard{display:flex;gap:10px;align-items:flex-start}.thumb{width:160px;height:90px;object-fit:cover;border-radius:6px;flex:none;background:var(--line)}
+@media(max-width:480px){.vcard{flex-direction:column}}

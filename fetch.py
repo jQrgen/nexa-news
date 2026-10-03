@@ -80,7 +80,7 @@ class Polite:
 
 # ---------------------------------------------------------------- relevance and flags
 # Unambiguous Nexa terms. "Nexa" alone is also a car brand, a font, a spyware firm, a card scheme ...
-STRONG = re.compile(r"nexa\.org|\bNexa (?:blockchain|network|chain|full[- ]node|node|coin|wallet|token|tokens|community|forum|foundation|developers?|mainnet|testnet|upgrade|hard ?fork)\b|"
+STRONG = re.compile(r"nexa\.org|\bNexa(?:'s)? (?:blockchain|network|chain|full[- ]node|node|coin|wallet|token|tokens|community|forum|foundation|developers?|mainnet|testnet|upgrade|hard ?fork|crypto|cryptocurrency|L1|layer[- ]1|mining|miners?)\b|\bNexa \(NEXA\)|\bNEXA token\b|"
                     r"\bNEXA coin\b|\$NEXA\b|\bBitcoin Unlimited\b|\bWally ?Wallet\b|\bOtoplo\b|\bRostrum\b|\bVotePeer\b|\bBuild On Nexa\b|\bNexScript\b|"
                     r"\blibnexa|\bNexaPow\b|\bNiftyArt\b|\bTailstorm\b.*\bNexa\b|\bNexa\b.*\bTailstorm\b|\bnexajs\b|\bnexa-js\b", re.I | re.S)
 NEXA_WORD = re.compile(r"\bnexa\b", re.I)
@@ -182,6 +182,8 @@ class Store:
         if not url or not title: return None
         text = f"{title}\n{teaser}\n{author}"
         keep, why = (True, "manual") if manual else is_relevant(text, mode)
+        if keep and not manual and source.get("require") and not re.search(source["require"], text, re.I):
+            keep, why = False, "source 'require' rule not met"
         if not keep:
             self.skipped[why] = self.skipped.get(why, 0) + 1; return None
         if not published: self.skipped["no date"] = self.skipped.get("no date", 0) + 1; return None
@@ -276,6 +278,87 @@ def read_sitemap(http, store, s, cutoff, seen):
                       mode=s.get("filter", "all"), cutoff=cutoff)
     return {"ok": True, "requests": 1 + fetched, "ok_requests": 1 + fetched, "entries": len(pages), "error": err}
 
+def _json(http, url, headers=None):
+    if not http.allowed(url): raise PermissionError("blocked by robots.txt")
+    r = http.get(url, conditional=False); r.raise_for_status(); return r.json()
+
+def read_hn(http, store, s, cutoff):
+    """Hacker News via the public Algolia API (hn.algolia.com, no robots.txt restrictions, documented public API)."""
+    ok = entries = 0; err = None
+    for q in s["queries"]:
+        u = "https://hn.algolia.com/api/v1/search_by_date?" + urllib.parse.urlencode({"query": q, "tags": "(story,comment)", "hitsPerPage": 50,
+                                                                                    "numericFilters": f"created_at_i>{int(cutoff.timestamp())}"})
+        try: d = _json(http, u); ok += 1
+        except Exception as ex: err = f"{type(ex).__name__}: {ex}"[:200]; continue
+        for h in d.get("hits", []):
+            entries += 1
+            hn = f"https://news.ycombinator.com/item?id={h['objectID']}"
+            if h.get("comment_text"):
+                title = "Comment on: " + (h.get("story_title") or "Hacker News thread"); teaser = plain(h["comment_text"])
+            else:
+                title = h.get("title") or ""; teaser = plain(h.get("story_text") or "") + " " + (h.get("url") or "")
+            when = dt.datetime.fromtimestamp(h["created_at_i"], UTC)
+            store.add(url=hn, title=title, teaser=teaser, published=when, source=s, author=h.get("author") or "", kind="thread",
+                      mode=s.get("filter", "strict"), cutoff=cutoff, extra={"link_out": h.get("url")} if h.get("url") else None)
+    return {"ok": ok > 0, "requests": len(s["queries"]), "ok_requests": ok, "entries": entries, "error": err}
+
+def read_github(http, store, s, cutoff):
+    """GitHub repository search via the public REST API, unauthenticated (10 requests/minute). Repos are dated by creation."""
+    ok = entries = 0; err = None
+    me = {r.lower() for r in s.get("exclude_repos", [])}
+    for q in s["queries"]:
+        u = "https://api.github.com/search/repositories?" + urllib.parse.urlencode({"q": q, "sort": "updated", "per_page": 50})
+        try: d = _json(http, u); ok += 1
+        except Exception as ex: err = f"{type(ex).__name__}: {ex}"[:200]; continue
+        for r in d.get("items", []):
+            entries += 1
+            if r["full_name"].lower() in me or r.get("fork"): continue
+            desc = r.get("description") or ""
+            when = dt.datetime.fromisoformat(r["created_at"].replace("Z", "+00:00"))
+            item = store.add(url=r["html_url"], title=f'{r["full_name"]}: {desc}'[:200] if desc else r["full_name"], teaser=desc + " " + " ".join(r.get("topics") or []),
+                             published=when, source=s, author=r["owner"]["login"], kind="repo", mode=s.get("filter", "strict"), cutoff=cutoff)
+            if item and re.search(r"\bofficial\b", desc, re.I):
+                item["flags"].append("claims-official")   # third-party repo calling itself official: possible impersonation or malware
+    return {"ok": ok > 0, "requests": len(s["queries"]), "ok_requests": ok, "entries": entries, "error": err}
+
+def read_youtube_api(http, store, s, cutoff):
+    """Third-party videos via the official YouTube Data API v3 search. Needs YOUTUBE_API_KEY in the environment.
+    No YouTube pages are fetched. Thumbnails are copied to data/thumbs/ (served from our own site) when ytimg.com allows it."""
+    key = os.environ.get("YOUTUBE_API_KEY")
+    if not key: return {"ok": False, "requests": 0, "ok_requests": 0, "entries": 0, "error": "YOUTUBE_API_KEY is not set"}
+    ok = entries = 0; err = None
+    skip = {c.lower() for c in s.get("exclude_channel_ids", [])}
+    for q in s["queries"]:
+        params = {"part": "snippet", "type": "video", "q": q, "order": "date", "maxResults": 25, "relevanceLanguage": "en",
+                  "publishedAfter": cutoff.strftime("%Y-%m-%dT%H:%M:%SZ"), "key": key}
+        try:
+            r = requests.get("https://www.googleapis.com/youtube/v3/search", params=params, headers={"User-Agent": AGENT}, timeout=30)
+            r.raise_for_status(); d = r.json(); ok += 1
+        except Exception as ex:
+            err = f"{type(ex).__name__}"[:200]; continue   # never log the URL: it contains the key
+        for v in d.get("items", []):
+            entries += 1; sn = v["snippet"]; vid = v["id"].get("videoId")
+            if not vid or sn.get("channelId", "").lower() in skip: continue
+            when = dt.datetime.fromisoformat(sn["publishedAt"].replace("Z", "+00:00"))
+            item = store.add(url=f"https://www.youtube.com/watch?v={vid}", title=html_unescape(sn.get("title", "")), teaser=html_unescape(sn.get("description", "")),
+                             published=when, source=s, author=sn.get("channelTitle", ""), kind="video", mode=s.get("filter", "strict"), cutoff=cutoff)
+            if item: save_thumb(http, item, (sn.get("thumbnails") or {}).get("medium", {}).get("url"))
+    return {"ok": ok > 0, "requests": len(s["queries"]), "ok_requests": ok, "entries": entries, "error": err}
+
+def html_unescape(t):
+    import html as _h; return _h.unescape(t or "")
+def save_thumb(http, item, url):
+    if not url or not http.allowed(url): return
+    try:
+        r = http.get(url, conditional=False)
+        if r.status_code == 200 and r.headers.get("content-type", "").startswith("image/") and len(r.content) < 300_000:
+            os.makedirs(path("data", "thumbs"), exist_ok=True)
+            with open(path("data", "thumbs", item["id"] + ".jpg"), "wb") as f: f.write(r.content)
+            item["thumb"] = f"thumbs/{item['id']}.jpg"
+    except requests.RequestException: pass
+
+READERS = {"hn": read_hn, "github": read_github, "youtube-api": read_youtube_api}
+
 # ---------------------------------------------------------------- manual add
 X_URL = re.compile(r"^https?://(?:www\.|mobile\.)?(?:x|twitter)\.com/(\w{1,15})/status/(\d+)")
 def manual_add(http, store, a):
@@ -347,7 +430,9 @@ def main():
             if not s.get("enabled") or (only and s["id"] not in only): continue
             before = len(store.new)
             cutoff = NOW - dt.timedelta(days=max(a.days, s.get("lookback_days", 0)))
-            res = read_sitemap(http, store, s, cutoff, seen) if s["type"] == "sitemap" else read_feed(http, store, s, cutoff)
+            if s["type"] == "sitemap": res = read_sitemap(http, store, s, cutoff, seen)
+            elif s["type"] in READERS: res = READERS[s["type"]](http, store, s, cutoff)
+            else: res = read_feed(http, store, s, cutoff)
             res.update(checked=NOW.isoformat(timespec="seconds"), new=len(store.new) - before)
             health[s["id"]] = res
             say(f"{s['id']:<20} ok={res['ok_requests']}/{res['requests']} entries={res['entries']} new={res['new']} error={res['error']}")

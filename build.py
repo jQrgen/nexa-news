@@ -28,8 +28,9 @@ def write(rel, text):
 def dump(rel, data): write(rel, json.dumps(data, ensure_ascii=False, indent=1) + "\n")
 
 PLATFORMS = {"forum": "Forum", "blog": "nexa.org", "gitlab": "GitLab", "medium": "Medium", "news": "News", "mastodon": "Mastodon",
-             "x": "X", "reddit": "Reddit", "youtube": "YouTube", "podcast": "Podcast", "web": "Web", "nostr": "Nostr"}
-FLAG_LABEL = {"price": "price talk?", "shill": "promotion?", "spam": "spam?", "not-english": "not English", "ambiguous-nexa": "other 'Nexa'?"}
+             "x": "X", "reddit": "Reddit", "youtube": "YouTube", "podcast": "Podcast", "web": "Web", "nostr": "Nostr",
+             "hn": "Hacker News", "devto": "dev.to", "github": "GitHub"}
+FLAG_LABEL = {"claims-official": "says 'official'?", "price": "price talk?", "shill": "promotion?", "spam": "spam?", "not-english": "not English", "ambiguous-nexa": "other 'Nexa'?"}
 def display_title(i):
     t, p = i["title"], i.get("project")
     if i["kind"] in ("release", "tag") and p and p.split()[0].lower() not in t.lower(): return f"{p} {t}"
@@ -109,7 +110,7 @@ def shell(rel, title, body, *, here, desc, preview, scripts=""):
 </body></html>"""
 
 # ------------------------------------------------------------------ pieces
-def item_html(i, preview, up=""):
+def item_html(i, preview, up=""):  # up: path prefix to the site root
     pf = i["platform"]; cat = i["category"]
     badges = f'<span class="badge {"off" if cat == "official" else "ind"}">{"Official" if cat == "official" else "Independent"}</span>'
     if i.get("sponsored"): badges += '<span class="badge flag">Sponsored</span>'
@@ -126,6 +127,12 @@ def item_html(i, preview, up=""):
     if i.get("correction"):
         c = i["correction"]; summary += f'<p class="meta"><b>Corrected {esc(c.get("date", ""))}:</b> {esc(c.get("note", ""))}</p>'
     xcard = ""
+    if i["kind"] == "video":
+        thumb = (f'<img class="thumb" src="{up}assets/{esc(i["thumb"])}" alt="" width="160" height="90" loading="lazy">' if i.get("thumb") else "")
+        xcard = (f'<div class="xcard vcard">{thumb}<div>Video on YouTube by <b>{who}</b>. Plain link: no embedded player, no YouTube scripts. '
+                 f'<a href="{esc(i["url"])}" rel="noopener noreferrer" target="_blank">Watch on youtube.com</a></div></div>')
+    if i.get("link_out"):
+        xcard += f'<div class="meta">↳ Linked: <a href="{esc(i["link_out"])}" rel="noopener noreferrer" target="_blank">{esc(i["link_out"].split("//")[-1][:80])}</a></div>'
     if pf == "x":
         xcard = (f'<div class="xcard">Post on X by <b>{who}</b>. This is a plain link: we show no X embed and load no X scripts. '
                  f'<a href="{esc(i["url"])}" rel="noopener noreferrer" target="_blank">Open on x.com</a></div>')
@@ -143,7 +150,7 @@ def side_list(items, empty, up=""):
     return "<ul>" + "".join(out) + "</ul>"
 
 def public_fields(i):
-    keep = ("id", "url", "title", "author", "platform", "category", "kind", "project", "source_name", "published", "summary", "status", "sponsored", "correction", "outlet_note")
+    keep = ("id", "url", "title", "author", "platform", "category", "kind", "project", "source_name", "published", "summary", "status", "sponsored", "correction", "outlet_note", "thumb", "link_out")
     d = {k: i.get(k) for k in keep if i.get(k) is not None}
     if d.get("author"): d["author"] = re.sub(r"\s*[(<]?[\w.+-]+@[\w-]+\.[\w.-]+[)>]?", "", d["author"]).strip()
     d["title"] = display_title(i)
@@ -164,6 +171,9 @@ def build(preview):
     if os.path.exists(OUT): shutil.rmtree(OUT)
     os.makedirs(OUT)
     shutil.copytree(path("assets"), os.path.join(OUT, "assets"))
+    for i in shown:
+        if i.get("thumb") and os.path.exists(path("data", i["thumb"])):
+            os.makedirs(os.path.join(OUT, "assets", "thumbs"), exist_ok=True); shutil.copy(path("data", i["thumb"]), os.path.join(OUT, "assets", i["thumb"]))
     updated = store.get("updated")
     upd = dt.datetime.fromisoformat(updated).astimezone(OSLO).strftime("%-d %b %Y, %H:%M") + " Oslo time" if updated else "never"
 
@@ -171,21 +181,26 @@ def build(preview):
     plats = [p for p in PLATFORMS if any(i["platform"] == p for i in shown)]
     chips = "".join(f'<button type="button" class="chip" data-platform="{p}" aria-pressed="false">{esc(PLATFORMS[p])}</button>' for p in plats)
     lis = "".join(item_html(i, preview) for i in shown) or '<li class="empty">No items yet.</li>'
-    indep = [i for i in news if i["category"] == "independent"][:6]
+    n_ind = sum(1 for i in shown if i["category"] == "independent")
+    official_latest = [i for i in news if i["category"] == "official"][:6]
     pend_n = sum(1 for i in shown if i["status"] == "pending")
-    body = f"""<h1>Everything public about Nexa, in one place</h1>
-<p class="lead">News, forum posts, articles, releases and independent coverage of the Nexa blockchain, Wally Wallet, Otoplo, Rostrum and Build On Nexa. Each item links to the original and has a short summary in our own words. Last fetched {esc(upd)}. {len(shown)} items{f", {pend_n} pending review" if preview else ""}.</p>
+    default_cat = "independent" if n_ind else "all"
+    seg = "".join(f'<button type="button" data-cat="{k}" aria-pressed="{"true" if k == default_cat else "false"}">{lab}</button>'
+                  for k, lab in (("independent", f"Independent coverage ({n_ind})"), ("all", "All"), ("official", "Official channels")))
+    body = f"""<h1>Nexa, as the rest of the internet sees it</h1>
+<p class="lead">Independent coverage of the Nexa blockchain first: news sites, blogs, forums, Hacker News, code and videos by people outside Nexa and Bitcoin Unlimited, plus official news and releases one click away. Each item links to the original and has a short summary in our own words. Last fetched {esc(upd)}. {len(shown)} items, {n_ind} independent{f", {pend_n} pending review" if preview else ""}.</p>
 <div class="layout"><div>
 <div class="toolbar" role="group" aria-label="Filter the feed">
-<div class="seg" role="group" aria-label="Category"><button type="button" data-cat="" aria-pressed="true">All</button><button type="button" data-cat="official" aria-pressed="false">Official</button><button type="button" data-cat="independent" aria-pressed="false">Independent coverage</button></div>
+<div class="seg" role="group" aria-label="Category">{seg}</div>
 <div class="chips" role="group" aria-label="Platform">{chips}</div>
 <input type="search" id="q" placeholder="Search titles" aria-label="Search titles"><span id="count" aria-live="polite"></span></div>
 <ol class="feed" id="feed">{lis}</ol>
 </div>
 <aside>
-<div class="box" id="independent"><h2>Independent coverage</h2>{side_list(indep, "No independent coverage in this period yet.")}<a class="more" href="#category=independent">All independent coverage →</a></div>
+<div class="box"><h2>From official channels</h2>{side_list(official_latest, "Nothing from official channels yet.")}<a class="more" href="#category=official">All official items →</a></div>
 <div class="box"><h2>Latest releases</h2>{side_list(releases[:5], "No releases yet.")}<a class="more" href="releases/">Release timeline →</a></div>
-<div class="box"><h2>On X</h2><p class="meta">We don't read X automatically. Notable posts are added by hand as plain links. Official account: <a href="https://x.com/NexaMoney" rel="noopener noreferrer">@NexaMoney</a>.</p></div>
+<div class="box"><h2>Tip us</h2><p class="meta">Seen a good article, video, podcast or thread about Nexa, including criticism? Suggest it in <a href="https://github.com/jQrgen/nexa-news/issues" rel="noopener noreferrer">GitHub Issues</a>.</p></div>
+<div class="box"><h2>On X</h2><p class="meta">We don't read X automatically. Notable posts are added by hand as plain links. Official accounts: <a href="https://x.com/NexaMoney" rel="noopener noreferrer">@NexaMoney</a>, <a href="https://x.com/BitcoinUnlimit" rel="noopener noreferrer">@BitcoinUnlimit</a>.</p></div>
 <div class="box"><h2>Office screen</h2><p class="meta">A full-screen view for a TV or monitor, portrait or landscape. <a href="screen/">Open the office screen →</a></p></div>
 </aside></div>
 <p class="notice">Summaries are written by the editor from the title and public description. We don't copy posts and don't publish price talk or promotion. Nothing here is investment advice.</p>"""
@@ -218,6 +233,7 @@ def build(preview):
         if s["type"] == "reference" and s.get("status", "").startswith("not found"): return "st-bad", "not found"
         if s["type"] == "reference": return "st-ref", "not fetched"
         if not s.get("enabled"): return "st-bad", "not used"
+        if h and not h.get("ok") and "API_KEY" in (h.get("error") or ""): return "st-man", "needs API key"
         if h and not h.get("ok"): return "st-bad", "failing"
         return "st-ok", "working"
     srows = []
@@ -226,7 +242,8 @@ def build(preview):
         checked = day(h["checked"]) if h.get("checked") else (day(s["verified"] + "T12:00:00+00:00") if s.get("verified") else "")
         note = re.sub(r"^ok[:,]\s*", "", s.get("status", "")).strip(); note = note[:1].upper() + note[1:]
         if note and not note.endswith("."): note += "."
-        method = {"feed": "RSS/Atom feed", "search": "news search RSS", "sitemap": "sitemap + page titles", "manual": "added by hand", "reference": "listed only"}[s["type"]]
+        method = {"feed": "RSS/Atom feed", "search": "news search RSS", "sitemap": "sitemap + page titles", "manual": "added by hand", "reference": "listed only",
+                  "hn": "Algolia HN search API", "github": "GitHub search API", "youtube-api": "YouTube Data API v3"}.get(s["type"], s["type"])
         srows.append(f'<tr><td data-l="Source"><a href="{esc(s["url"])}" rel="noopener noreferrer" target="_blank">{esc(s["name"])}</a></td>'
                      f'<td data-l="Type">{esc(PLATFORMS.get(s.get("platform"), s.get("platform", "")))} · <span class="badge {"off" if s["category"] == "official" else "ind"}">{s["category"].capitalize()}</span></td>'
                      f'<td data-l="Method">{method}</td><td data-l="Status" class="{cls}">{lab}</td>'
@@ -238,7 +255,7 @@ def build(preview):
 <h2>Official and independent</h2>
 <p class="prose"><span class="badge off">Official</span> means the item comes from Nexa, Bitcoin Unlimited or a project linked from nexa.org (including articles by jQrgen, who works on Nexa). <span class="badge ind">Independent</span> means anyone else: crypto news sites, blogs, podcasts and forum threads found through public search.</p>
 <h2>News search terms</h2>
-<p class="prose">{esc(", ".join(bing.get("queries", [])))}. "Nexa" is also the name of a car brand, a font, a payment card and other companies, so search results need an unambiguous Nexa term, and the editor reviews every match.</p>
+<p class="prose">{esc(", ".join(bing.get("queries", [])))}. "Nexa" is also the name of a car brand, a font, a payment card and other companies, so search results need an unambiguous Nexa term (Nexa together with blockchain, crypto, Tailstorm, Wally, NEXA coin or Bitcoin Unlimited), and the editor reviews every match.</p>
 <h2>X (Twitter)</h2>
 <p class="prose">Not read automatically: there is no free API and scraping breaks X's terms. Posts are added by hand by URL and shown as plain links with our own summary, with no X embeds or scripts. Official accounts: <a href="https://x.com/NexaMoney" rel="noopener noreferrer">@NexaMoney</a> (linked from nexa.org) and <a href="https://x.com/BitcoinUnlimit" rel="noopener noreferrer">@BitcoinUnlimit</a> (listed on bitcoinunlimited.info).</p>
 <p class="meta">Know a source we miss? Suggest it in <a href="https://github.com/jQrgen/nexa-news/issues" rel="noopener noreferrer">GitHub Issues</a>.</p>"""

@@ -3,6 +3,17 @@
  "entries": [
   {
    "date": "2026-10-03",
+   "title": "Independent coverage first",
+   "changes": [
+    "The front page now opens on independent coverage; official channels moved to a side box and a filter.",
+    "New independent sources: Hacker News (Algolia API), CoinDesk, Cointelegraph, The Block, Decrypt, Bitcoin.com News, dev.to and GitHub repository search.",
+    "Sharper news-search queries that leave out other companies called Nexa.",
+    "Support for third-party YouTube videos through the official YouTube Data API, shown as plain links with a locally served thumbnail and no embedded player (switched on once an API key is set).",
+    "GitHub repositories that call themselves 'official' are flagged for the editor."
+   ]
+  },
+  {
+   "date": "2026-10-03",
    "title": "Nexa News launches",
    "changes": [
     "Feed of public Nexa news, forum posts, articles and releases, with filters by platform and by official or independent coverage.",
