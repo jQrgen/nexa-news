@@ -53,7 +53,336 @@
 <li>jQrgen gives final approval before anything is published.</li>
 </ol>
 <h3>Corrections</h3>
-<p>Errors are fixed openly. Each corrected item gets a dated "Corrected" note that says what changed.</p></section>
+<p>Errors are fixed openly. Each corrected item gets a dated "Corrected" note that says what changed.</p></section><section class="editor-doc" data-file="calendar.md"><h2>Nexa News rolling calendar: October to December 2026</h2>
+<p>Status: draft by the editor, 3 October 2026. Not committed or published. Needs jQrgen's approval.
+All times are Oslo time. Oslo is on CEST (UTC+2) until Sunday 25 October 2026, then CET (UTC+1). Times given in UTC by a source are converted.</p>
+<p><strong>How to read this calendar</strong>
+- <strong>Confirmed:</strong> an official public source gives the date. The link is in the entry.
+- <strong>Expected:</strong> our estimate from past posting patterns. The date is not announced, so treat it as a window to watch, not a promise.
+- Anything without a verifiable date goes in "Unconfirmed / to watch". We don't invent dates.
+- When an entry's date has passed, move it to "Past events" at the bottom. Never delete it (see coverage-plan.md, rule 7).</p>
+<p>Sources checked on 3 October 2026, respecting each site's robots.txt: forum.nexa.org and forum.bitcoinunlimited.info (topic JSON; /search is disallowed, so it wasn't used), nexa.org (roadmap and sitemap), spec.nexa.org, GitLab release and tag Atom feeds (raw files are disallowed, so they weren't used), and token2049.com (via web search).</p>
+<hr />
+<h3>Weekly rhythm (proposal)</h3>
+<table>
+<thead>
+<tr>
+<th>When</th>
+<th>What</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Every day, morning (proposal: about 09:00)</td>
+<td><strong>Feed review.</strong> Run the fetch, then go through <code>queue/review.json</code>: check links, flags (price, shill, sponsored, ambiguous-nexa, not-english) and summaries. Approve or reject each item, then send the approved items to jQrgen for final approval.</td>
+<td>Also do a quick manual check of the sources we can't fetch: @NexaMoney, @BitcoinUnlimit and @jqrgensn on X, r/Nexa, medium.com/@nexacoin and youtube.com/@NexaCoin.</td>
+</tr>
+<tr>
+<td><strong>Monday (proposal)</strong></td>
+<td><strong>Weekly roundup slot.</strong> A short "This week in Nexa" covering the previous Monday to Sunday: releases, forum posts, governance, independent coverage and criticism, and what's coming up from this calendar.</td>
+<td>Proposed day only: jQrgen to confirm the day, and whether the roundup is published or kept internal. It goes through the normal approval process. Mondays in the window: 5, 12, 19, 26 Oct; 2, 9, 16, 23, 30 Nov; 7, 14, 21, 28 Dec.</td>
+</tr>
+<tr>
+<td>Friday (suggested)</td>
+<td>Calendar check: move finished events to "Past events", add new dates from official posts, and recheck the "to watch" list.</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3>Recurring patterns (from data/items.json and the forum.nexa.org topic list)</h3>
+<table>
+<thead>
+<tr>
+<th>Series</th>
+<th>Pattern seen</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Nexa Monthly Newsletter</strong> (covers the previous month)</td>
+<td>Posted on the Nexa Forum on the 1st, at 20:00 UTC (22:00 Oslo in summer). Two exceptions: 2 May and 3 Jun 2026. Earlier issues were on nexa.org on the 1st.</td>
+<td><a href="https://forum.nexa.org/t/nexa-monthly-newsletter-september-2026-ahead-of-the-storm/1759">Sep 2026, posted 1 Oct</a> · <a href="https://forum.nexa.org/t/nexa-monthly-newsletter-august-2026-redesign-of-the-mining-puzzle/1740">Aug 2026, posted 1 Sep</a> · <a href="https://forum.nexa.org/t/nexa-monthly-newsletter-july-2026-hardware-acceleration/1728">Jul 2026, posted 1 Aug</a> · <a href="https://nexa.org/articles-database/newsletter-january-2026">Jan 2026, nexa.org</a></td>
+</tr>
+<tr>
+<td><strong>Monthly Development Updates</strong> (covers the previous month)</td>
+<td>Mid-month, between the 13th and the 21st (13 May, 15 Jun, 21 Jul, 18 Aug, 15 Sep 2026).</td>
+<td><a href="https://forum.nexa.org/t/monthly-development-updates-august-2026/1751">August 2026, posted 15 Sep</a> · <a href="https://forum.nexa.org/t/monthly-development-updates-july-2026/1732">July 2026, posted 18 Aug</a> · <a href="https://forum.nexa.org/t/monthly-development-updates-june-2026/1721">June 2026, posted 21 Jul</a></td>
+</tr>
+<tr>
+<td><strong>Nexa [Month] Highlights</strong> (named for the current month)</td>
+<td>Mid-month, between the 13th and the 19th (18 Apr, 15 May, 18 Jun, 15 Jul, 13 Aug, 19 Sep 2026).</td>
+<td><a href="https://forum.nexa.org/t/nexa-september-highlights-full-node-2-2-0-0-released/1752">September, posted 19 Sep</a> · <a href="https://forum.nexa.org/t/nexa-august-highlights-nexapow-2-0-introduced/1731">August, posted 13 Aug</a> · <a href="https://forum.nexa.org/t/nexa-july-highlights-a-layer-of-ownership/1713">July, posted 15 Jul</a></td>
+</tr>
+<tr>
+<td><strong>Hardware article series</strong> (Blitz and NexaPoW)</td>
+<td>Every 2 to 4 weeks (27 Jul, 11 Aug, 9 Sep, 29 Sep). Part four says the series continues.</td>
+<td><a href="https://forum.nexa.org/t/hardware-acceleration-the-blitz-card/1758">Part 4: The Blitz Card</a></td>
+</tr>
+<tr>
+<td><strong>Full node releases</strong> (GitLab)</td>
+<td>Irregular: 2.0.0.0 (Feb 2025), 2.1.0.0 (Aug 2025), 2.2.0.0 (1 Sep 2026). The next release is the one that activates Tailstorm (see "to watch").</td>
+<td><a href="https://gitlab.com/nexa/nexa/-/releases">Releases</a></td>
+</tr>
+<tr>
+<td><strong>Otoplo Wallet releases</strong></td>
+<td>Every 1 to 4 months. Latest is v5.3.0 (22 Sep 2026).</td>
+<td><a href="https://gitlab.com/nexa/otoplo/otoplo-wallet/-/releases">Releases</a></td>
+</tr>
+<tr>
+<td><strong>Wally Wallet releases</strong></td>
+<td>Every 1 to 3 months. Latest is 3.31.00 (9 Sep 2026).</td>
+<td><a href="https://gitlab.com/wallywallet/wallet/-/releases">Releases</a></td>
+</tr>
+<tr>
+<td><strong>libnexakotlin releases</strong></td>
+<td>Every few weeks to months. Latest is 0.7.0 (4 Sep 2026).</td>
+<td><a href="https://gitlab.com/nexa/libnexakotlin/-/releases">Releases</a></td>
+</tr>
+<tr>
+<td><strong>Rostrum releases</strong></td>
+<td>Once or twice a year. Latest is 14.0.1 (3 Apr 2026).</td>
+<td><a href="https://gitlab.com/nexa/rostrum/-/releases">Releases</a></td>
+</tr>
+<tr>
+<td><strong>libnexa-js tags</strong></td>
+<td>No new tag since libnexa-js-v1.0.3 (26 Sep 2024).</td>
+<td><a href="https://gitlab.com/nexa/libnexa-js/-/tags">Tags</a></td>
+</tr>
+<tr>
+<td><strong>BU votes</strong></td>
+<td>Each vote is announced about five weeks ahead. A "### VOTE ###" thread opens on the first day and is renamed "VOTING is CLOSED" when it ends.</td>
+<td><a href="https://forum.bitcoinunlimited.info/t/voting-is-closed-for-buips-221-to-224/654">VOTING is CLOSED for BUIPs 221 to 224 (Feb 2026)</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3>October 2026</h3>
+<table>
+<thead>
+<tr>
+<th>Date (Oslo)</th>
+<th>Entry</th>
+<th>Status</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fri 9 Oct</td>
+<td><strong>BU vote opens.</strong> Members vote on BUIPs over five calendar days, from 9 to 14 October. Votes are recorded in the VotePeer app, or by hand for members who can't use it. A "### VOTE ###" thread opens on the BU forum the same day.</td>
+<td>Confirmed</td>
+<td><a href="https://forum.bitcoinunlimited.info/t/announcing-the-next-bu-vote-9-to-14-october-2026/665">Announcing the next BU Vote: 9 to 14 October 2026</a></td>
+</tr>
+<tr>
+<td>Fri 9 Oct</td>
+<td><strong>BU Secretary election (2026–28 term) runs in the same vote.</strong> The only candidate BUIP posted so far is BUIP 225, in which Peter Rizun stands for re-election. The deadline for BUIPs was midday UTC on 25 Sep (14:00 Oslo).</td>
+<td>Confirmed (vote date). Final list of candidates not confirmed.</td>
+<td><a href="https://forum.bitcoinunlimited.info/t/advance-notice-candidate-applications-for-bu-secretary-oct-2026-28/664">Advance notice: Candidate Applications for BU Secretary</a> · <a href="https://forum.bitcoinunlimited.info/t/buip-225-re-elect-peter-r-for-bitcoin-unlimited-secretary/666">BUIP 225</a></td>
+</tr>
+<tr>
+<td>Wed 14 Oct</td>
+<td><strong>BU vote window ends.</strong> Watch for the vote thread to be renamed "VOTING is CLOSED", then cover the results. The date results are published isn't announced.</td>
+<td>Confirmed (end of window)</td>
+<td><a href="https://forum.bitcoinunlimited.info/t/announcing-the-next-bu-vote-9-to-14-october-2026/665">Vote announcement</a></td>
+</tr>
+<tr>
+<td>about 13 to 21 Oct</td>
+<td>Monthly Development Updates: September 2026</td>
+<td>Expected</td>
+<td>Pattern above</td>
+</tr>
+<tr>
+<td>about 13 to 19 Oct</td>
+<td>Nexa October Highlights</td>
+<td>Expected</td>
+<td>Pattern above</td>
+</tr>
+</tbody>
+</table>
+<h3>November 2026</h3>
+<table>
+<thead>
+<tr>
+<th>Date (Oslo)</th>
+<th>Entry</th>
+<th>Status</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>about Sun 1 Nov, evening</td>
+<td>Nexa Monthly Newsletter, October 2026</td>
+<td>Expected</td>
+<td>Pattern above</td>
+</tr>
+<tr>
+<td>about 13 to 21 Nov</td>
+<td>Monthly Development Updates: October 2026</td>
+<td>Expected</td>
+<td>Pattern above</td>
+</tr>
+<tr>
+<td>about 13 to 19 Nov</td>
+<td>Nexa November Highlights</td>
+<td>Expected</td>
+<td>Pattern above</td>
+</tr>
+</tbody>
+</table>
+<p><em>No confirmed Nexa events in November yet. See "to watch" for the Hard Fork 2 date in the spec.</em></p>
+<h3>December 2026</h3>
+<table>
+<thead>
+<tr>
+<th>Date (Oslo)</th>
+<th>Entry</th>
+<th>Status</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>about Tue 1 Dec, evening</td>
+<td>Nexa Monthly Newsletter, November 2026</td>
+<td>Expected</td>
+<td>Pattern above</td>
+</tr>
+<tr>
+<td>about 13 to 21 Dec</td>
+<td>Monthly Development Updates: November 2026</td>
+<td>Expected</td>
+<td>Pattern above</td>
+</tr>
+<tr>
+<td>about 13 to 19 Dec</td>
+<td>Nexa December Highlights</td>
+<td>Expected</td>
+<td>Pattern above</td>
+</tr>
+<tr>
+<td>about Fri 1 Jan 2027 (just outside the window)</td>
+<td>Nexa Monthly Newsletter, December 2026</td>
+<td>Expected</td>
+<td>Pattern above</td>
+</tr>
+</tbody>
+</table>
+<p><em>No confirmed Nexa events in December yet.</em></p>
+<hr />
+<h3>Unconfirmed / to watch</h3>
+<p>None of these are calendar dates yet. Each one moves into the month tables only when an official source gives a date.</p>
+<ol>
+<li><strong>Tailstorm / Hard Fork 2 activation.</strong> The sources disagree:
+   - spec.nexa.org lists the mainnet (and testnet) activation time as <code>1793495471</code>, which is <strong>1 Nov 2026 at 01:11:11 UTC (02:11 Oslo)</strong>. Activation goes through a "pending" block first, timed by median time past. <a href="https://spec.nexa.org/upgrades/hard-fork-2/">Hard Fork 2 (spec)</a>
+   - The official posts say the activation day has <strong>not</strong> been announced. The September Highlights say the team will keep testing "over the next few months... before announcing the actual activation day on the mainnet". The 2.2.0.0 post says the fork "won't be activated until the next release", and the August development update says activation was "moved... to a future date". <a href="https://forum.nexa.org/t/nexa-september-highlights-full-node-2-2-0-0-released/1752">September Highlights</a> · <a href="https://forum.nexa.org/t/nexa-full-node-2-2-0-0-the-final-checkpoint-before-the-tailstorm/1742">2.2.0.0 announcement</a> · <a href="https://forum.nexa.org/t/monthly-development-updates-august-2026/1751">Dev update, August 2026</a>
+   - The roadmap says the 2026 hard fork is "scheduled for the end of 2026". <a href="https://forum.nexa.org/t/nexa-development-roadmap-2026-27/1655">Roadmap 2026–27</a> · <a href="https://nexa.org/roadmap">nexa.org/roadmap</a> (shows "Coming Soon")
+   - Also note: the spec gives roughly 1-second subblocks (<code>tailstorm_k = 120</code>), while the forum posts say about 40 subblocks around every 3 seconds. <a href="https://spec.nexa.org/blocks/tailstorm/">Tailstorm (spec)</a>
+   - <strong>Action:</strong> don't publish 1 Nov as the activation date. Watch for the activating node release and an official announcement.</li>
+<li><strong>New mining algorithm (NexaPoW 2.0).</strong> In BUIP 225, Peter Rizun says it is "targeted for this winter". It's part of the 2026 hard fork. No date given. <a href="https://forum.bitcoinunlimited.info/t/buip-225-re-elect-peter-r-for-bitcoin-unlimited-secretary/666">BUIP 225</a></li>
+<li><strong>BU vote results and the start of the Secretary's new term.</strong> The advance notice says the current term "began on 11 October 2026", which looks like a typo (probably 2024). The date the new term starts isn't confirmed. <a href="https://forum.bitcoinunlimited.info/t/advance-notice-candidate-applications-for-bu-secretary-oct-2026-28/664">Advance notice</a></li>
+<li><strong>TOKEN2049 Singapore, 7 to 8 Oct 2026</strong> (side-event week 5 to 11 Oct). The conference dates are confirmed by the organiser (<a href="https://www.token2049.com/singapore">token2049.com</a>). Nexa's part in it is <strong>not confirmed by an official Nexa channel</strong>: the only mention found is a LinkedIn post by All Things Blockchain (a Nexa ecosystem partner) listing Nexa as a partner of a networking evening "ahead of Token2049", with no date given. LinkedIn needs a login, so we couldn't check it directly. <a href="https://www.linkedin.com/posts/atb-blockchain_web3-token2049-blockchain-activity-7505415337308225536-AkZk">ATB LinkedIn post</a> · <a href="https://forum.nexa.org/t/new-ecosystem-partnership-announcement-and-other-news/1650">ATB/EvolvH3R partnership</a></li>
+<li><strong>Other conferences in Q4 2026.</strong> No official announcement found for Bitcoin MENA 2026, the Australian Crypto Convention 2026 or Blockchain Futurist 2026. Nexa sponsored <a href="https://forum.nexa.org/t/nexa-sponsors-bitcoin-mena-2025/1617">Bitcoin MENA 2025</a> (8 to 9 Dec 2025) and the <a href="https://forum.nexa.org/t/australian-crypto-convention-2024-with-nexa-at-the-forefront/444">Australian Crypto Convention 2024</a> (23 to 24 Nov 2024), so watch for similar announcements in October and November.</li>
+<li><strong>Blitz card commercial release.</strong> "The exact release date has not yet been set" (<a href="https://forum.nexa.org/t/nexa-development-roadmap-2026-27/1655">Roadmap</a>). Peter Rizun's goal is 1,000+ cards sold over two years (<a href="https://forum.bitcoinunlimited.info/t/buip-225-re-elect-peter-r-for-bitcoin-unlimited-secretary/666">BUIP 225</a>).</li>
+<li><strong>Roadmap items expected in 2026 without dates:</strong> TokaDex DEX ("expected to come still in 2026"), the Nexa Warriors NFT trading card game ("early in the second half of the year"), post-quantum signatures on testnet ("second half of the year"; the forum roadmap says "likely Dilithium" but nexa.org/roadmap says Falcon), the Python library ("soon" per <a href="https://forum.nexa.org/t/build-on-nexa-start-building-today/1755">BON</a>), and the decentralised prediction market demo. <a href="https://nexa.org/roadmap">nexa.org/roadmap</a></li>
+<li><strong>Rostrum.</strong> The 2.2.0.0 post says Rostrum was "updated alongside this release", but the latest GitLab release is still 14.0.1 (3 Apr 2026). Watch for a new tag. <a href="https://gitlab.com/nexa/rostrum/-/releases">Rostrum releases</a></li>
+<li><strong>Next halving.</strong> This is outside the window. The reward halves every 1,050,000 blocks (about four years), so the second halving is at block 2,100,000. The first was in spring 2026. No calendar date has been published. <a href="https://forum.nexa.org/t/nexa-emission-schedule-the-journey-to-21-trillion-nexa/1706">Emission schedule post</a> · <a href="https://emission.nexa.org/">emission.nexa.org</a></li>
+<li><strong>Further out:</strong> the 2027 hard fork (no date), Nexa's first global hackathon ("in 2027", <a href="https://forum.nexa.org/t/new-ecosystem-partnership-announcement-and-other-news/1650">partnership post</a>), and the follow-up documentary to <em>Hijacking Bitcoin</em>, in which Peter Rizun was interviewed (no release date, <a href="https://forum.bitcoinunlimited.info/t/buip-225-re-elect-peter-r-for-bitcoin-unlimited-secretary/666">BUIP 225</a>).</li>
+</ol>
+<hr />
+<h3>Past events (archive: move entries here, never delete)</h3>
+<table>
+<thead>
+<tr>
+<th>Date (Oslo)</th>
+<th>Entry</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fri 25 Sep 2026, 14:00</td>
+<td>Deadline for BUIPs in the October BU vote (midday UTC)</td>
+<td><a href="https://forum.bitcoinunlimited.info/t/announcing-the-next-bu-vote-9-to-14-october-2026/665">Vote announcement</a></td>
+</tr>
+<tr>
+<td>Thu 1 Oct 2026, 22:00</td>
+<td>Nexa Monthly Newsletter, September 2026, posted (covered on the site)</td>
+<td><a href="https://forum.nexa.org/t/nexa-monthly-newsletter-september-2026-ahead-of-the-storm/1759">Newsletter</a></td>
+</tr>
+</tbody>
+</table></section><section class="editor-doc" data-file="coverage-plan.md"><h2>Nexa News coverage plan</h2>
+<p>Status: draft by the editor, 3 October 2026. Not committed or published. Needs jQrgen's approval.
+Applies to: Q4 2026. Times are Oslo time (CEST until 25 October, CET after).</p>
+<h3>Standing rules (from editorial-policy.md, approved 2026-10-03)</h3>
+<ol>
+<li><strong>No price talk or shilling.</strong> No price predictions, trading tips or "next 100x" pieces. Items flagged <code>price</code> or <code>shill</code> are cut, or the price part is left out of our summary.</li>
+<li><strong>Sponsored material is labelled or excluded.</strong> If we can't tell whether a piece was paid for, it stays out until we've checked. A newsworthy piece that its publisher clearly marks as sponsored can run, but only with a visible "Sponsored" label. Bitcoin.com News runs paid press releases, so check every item from it.</li>
+<li><strong>Criticism runs when it has a source.</strong> If we can link to it, we include it and describe it fairly. We don't answer it on the item.</li>
+<li><strong>Summaries are in our own words.</strong> Each item gets a short summary with a working link, the source and author, and the date. We never copy whole posts.</li>
+<li><strong>Nothing without a link.</strong> No unverified accounts, no rumours, nothing behind a paywall or login, and nothing collected against robots.txt or a platform's terms. X, Reddit and the official YouTube channel are added by hand as links only.</li>
+<li><strong>Disclosure.</strong> jQrgen works on Nexa with Bitcoin Unlimited. His own posts (Medium, X) are marked as written by the site's owner.</li>
+<li><strong>Past events are archived, never deleted.</strong> Once an event has happened, it moves from the calendar or upcoming list into a "Past events" archive section, with its date and source link left as they were. If the outcome is public (vote results, a recording, a recap), add a link to it. <em>This rule comes from the editor's brief and is not yet in editorial-policy.md, and the site doesn't have an events section yet.</em></li>
+<li><strong>Process.</strong> The researcher flags items, the editor checks every link and summary, and jQrgen gives final approval before anything is published. Corrections get a dated "Corrected" note.</li>
+</ol>
+<h3>Beats</h3>
+<p>Cadence is based on what's in data/items.json and the forum.nexa.org topic list as of 3 October 2026.</p>
+<h4>1. Core protocol and the Tailstorm hard fork (Hard Fork 2)</h4>
+<ul>
+<li><strong>Sources to watch:</strong> Nexa Forum (forum.nexa.org, <code>nexa-forum</code>), full node releases and tags on GitLab (<code>gl-nexa-releases</code>, <code>gl-nexa-tags</code>), spec.nexa.org (<code>spec</code>, which has a page for Hard Fork 2), the nexa.org blog (<code>nexa-blog</code>) and the nexa.org/roadmap page, plus the Bing News queries for Tailstorm (<code>bing-news</code>).</li>
+<li><strong>Cadence:</strong> full node releases are irregular, roughly every 6 to 12 months (2.0.0.0 in Feb 2025, 2.1.0.0 in Aug 2025, 2.2.0.0 on 1 Sep 2026). Tailstorm explainers and the monthly development updates fill the gaps.</li>
+<li><strong>Worth running:</strong> a new node release, an announced activation date or block height, an upgrade notice for node operators, exchanges or miners, changes to the spec, and bug reports with a public thread (for example "Full node 2.2.0.0 problem"). An activation date only counts as confirmed once the team announces it. A date that only shows up in a spec or code default goes to "to watch".</li>
+</ul>
+<h4>2. NexaPoW 2.0 and Blitz hardware</h4>
+<ul>
+<li><strong>Sources to watch:</strong> the Nexa Forum "Hardware projects" category, the monthly highlights and newsletters, the BU forum (<code>bu-forum</code>, for example Peter Rizun's BUIP 225, which sets out his goals for Blitz and NexaPoW), spec.nexa.org (Mining, NexaPOW) and nexa.org/roadmap (the "Blitz Acceleration" items).</li>
+<li><strong>Cadence:</strong> the hardware article series has run every 2 to 4 weeks (27 Jul, 11 Aug, 9 Sep and 29 Sep 2026), and the fourth part says more is coming. NexaPoW 2.0 is part of the 2026 hard fork.</li>
+<li><strong>Worth running:</strong> new articles in the series, prototype or benchmark results with a source, availability or pre-order news for Blitz cards (check for sales language), and mining algorithm changes with a date. Leave out mining-profit and "how much will I earn" videos.</li>
+</ul>
+<h4>3. Wallets: Wally and Otoplo</h4>
+<ul>
+<li><strong>Sources to watch:</strong> Wally Wallet releases on GitLab (<code>gl-wally</code>; the feed now redirects to gitlab.com/wallywallet/wallet), Otoplo releases (<code>gl-otoplo</code>), Wally posts on the Nexa Forum (the official "Wally" account), and the Bing queries for "Wally Wallet" and "Otoplo".</li>
+<li><strong>Cadence:</strong> Otoplo releases every 1 to 4 months (most recently v5.3.0 on 22 Sep 2026). Wally has a release or beta roughly every 1 to 3 months (3.30 beta in Jun, 3.30.02 in Jul, 3.31.00 on 9 Sep 2026).</li>
+<li><strong>Worth running:</strong> releases with user-facing changes, security fixes, feature explainers (P2P offers, Web3 login), and support for Tailstorm or Hard Fork 2. Most YouTube wallet how-tos are in Hindi or Urdu. They stay pending unless they add something and we can summarise them accurately.</li>
+</ul>
+<h4>4. Developer tools: libnexa-js, libnexakotlin, Rostrum, NexScript, Build On Nexa</h4>
+<ul>
+<li><strong>Sources to watch:</strong> libnexa-js tags (<code>gl-libnexa-js</code>), libnexakotlin releases (<code>gl-libnexakotlin</code>), Rostrum releases (<code>gl-rostrum</code>), build.nexa.org (<code>build-on-nexa</code>, which has no feed, so watch for BON news on the forum), the Nexa Forum "Developers" category, the dev.to tag (<code>devto</code>) and GitHub search (<code>github-search</code>).</li>
+<li><strong>Cadence:</strong> libnexakotlin releases every few weeks to months (0.5.66 on 11 Jun, 0.5.68 on 25 Jun, 0.7.0 on 4 Sep 2026). Rostrum releases once or twice a year (latest 14.0.1 on 3 Apr 2026, though the 2.2.0.0 post says Rostrum was "updated alongside" it, so look for a new tag). libnexa-js has had no new tag since Sep 2024. NexScript and BON news arrives about monthly on the forum.</li>
+<li><strong>Worth running:</strong> releases, breaking changes, new SDKs (the Python library is "coming soon" on the roadmap), the AI skills or Starter App, playground upgrades, and serious third-party repos. Leave out repos that call themselves "official" without being linked from nexa.org.</li>
+</ul>
+<h4>5. Bitcoin Unlimited governance and votes (VotePeer)</h4>
+<ul>
+<li><strong>Sources to watch:</strong> the BU forum (<code>bu-forum</code>), bitcoinunlimited.info (<code>bu-site</code>), the VotePeer group on GitLab (<code>gl-votepeer</code>, no feed, add by hand) and @BitcoinUnlimit on X (<code>x-bu</code>, by hand).</li>
+<li><strong>Cadence:</strong> BU votes come a few times a year (Apr 2025, Nov 2025, Feb 2026 and 9 to 14 Oct 2026), each announced about five weeks ahead. Officer elections follow two-year terms.</li>
+<li><strong>Worth running:</strong> vote announcements, each BUIP put to a vote, the vote thread, and the results. Report results as the forum states them. Summaries stay neutral: the BU people involved (Peter Rizun, Andrew Clifford, Andrew Stone) are jQrgen's colleagues, so the disclosure matters most on this beat.</li>
+</ul>
+<h4>6. Ecosystem apps and games</h4>
+<ul>
+<li><strong>Sources to watch:</strong> the Nexa Forum ("Ecosystem", "Community events" and "ScriptQuest" categories), nexa.org/roadmap (TokaDex, Nexa Warriors trading card game, prediction market, wrapped BTC, cold storage wallet), the YouTube Data API search (<code>youtube-api</code>), GitHub search and Medium tag <code>nexa</code> (<code>medium-tag-nexa</code>).</li>
+<li><strong>Cadence:</strong> irregular. The roadmap expects TokaDex "in 2026" and the trading card game "early in the second half of the year", with no dates given.</li>
+<li><strong>Worth running:</strong> launches, testnet or beta openings, and demos with a public link. Partner trading competitions and promotions (for example "Nexa x Origami: Trading Competition") count as promotion, so cover them only as plain facts, or leave them out.</li>
+</ul>
+<h4>7. Events and conferences</h4>
+<ul>
+<li><strong>Sources to watch:</strong> the Nexa Forum ("Announcements", "Spaces" and "Community events" categories), @NexaMoney on X (by hand), the BU forum, and event organisers' own pages once Nexa's participation is confirmed by an official Nexa or BU channel.</li>
+<li><strong>Cadence:</strong> Spaces on X around anniversaries and milestones (the halving, 21 June), roughly monthly webinars with EvolvH3r and All Things Blockchain, BONFire developer calls, and one or two conference appearances a year (Australian Crypto Convention 2024, Blockchain Futurist 2025, TOKEN2049 2025, Bitcoin MENA 2025).</li>
+<li><strong>Worth running:</strong> confirmed appearances (who is speaking, where and when, with an official link), recordings, and recaps. Sponsorships are disclosed as sponsorships. A third-party mention alone (for example a partner's LinkedIn post) isn't enough to list an event. When an event is over, move it to "Past events" (rule 7).</li>
+</ul>
+<h4>8. Independent coverage and sourced criticism</h4>
+<ul>
+<li><strong>Sources to watch:</strong> Bing News (<code>bing-news</code>), CoinDesk, Cointelegraph, The Block (feed only, paywall), Decrypt, Bitcoin.com News (check for sponsorship), Hacker News (<code>hn</code>), Mastodon #nexa, Medium tag <code>nexa</code>, dev.to, YouTube Data API search, and r/Nexa by hand (<code>reddit</code>). The research list still needs a search of other crypto news sites, independent blogs, podcasts and critical threads (for example on Reddit and BitcoinTalk).</li>
+<li><strong>Cadence:</strong> low. Most weeks bring nothing usable. Expect noise from other brands called Nexa (Nexa AI, Nexa Cards, the NXA token and others).</li>
+<li><strong>Worth running:</strong> reporting or analysis by someone named, critical pieces with specifics (user problems, delays, security or centralisation concerns, exchange delistings or closures such as Exbitron), and non-English pieces that add something new (with a translated summary and a language flag). Each outlet gets a note on who runs it. Leave out price videos, "next Kaspa" hype, and anything we can't verify.</li>
+</ul>
+<h3>Known gaps to fix</h3>
+<ul>
+<li>Medium @nexacoin, r/Nexa, @NexaMoney and the official YouTube channel can only be added by hand, so they need a regular manual check (see the weekly rhythm in calendar.md).</li>
+<li>There's no events or "Past events" section on the site yet, and rule 7 should be added to editorial-policy.md.</li>
+<li>explorer.nexa.org gave an intermittent 520 error on 3 Oct, so recheck it on 4 Oct. It's a reference, not a news source.</li>
+</ul></section>
 <h2 id="corrections">Corrections and removal</h2>
 <p>If something is wrong, misattributed or should be removed, open an issue at <a href="https://github.com/jQrgen/nexa-news/issues" rel="noopener noreferrer">github.com/jQrgen/nexa-news/issues</a>. We fix factual errors and note the correction.</p>
 <h2>Licence</h2>
@@ -63,6 +392,6 @@
 </main>
 <footer class="site"><div class="wrap">
 <p><b>Nexa News</b> is run by Jørgen S. Notland (jQrgen), Oslo, with help from AI assistants. An editor reviews every item.</p>
-<p><b>Disclosure:</b> jQrgen works on Nexa with Bitcoin Unlimited. Items are labelled official or independent. Nothing here is investment advice. No tracking, no cookies, no third-party scripts. <a href="../about/">About, policy and corrections</a> · <a href="../changelog/">Changelog</a>.</p>
+<p><b>Disclosure:</b> jQrgen works on Nexa with Bitcoin Unlimited. Items are labelled official or independent. Nothing here is investment advice. No tracking, no cookies, no third-party scripts. <a href="../about/">About, policy and corrections</a> · <a href="../changelog/">Changelog</a> · <a href="https://github.com/jQrgen/nexa-news" rel="noopener noreferrer">Source code</a>.</p>
 </div></footer>
 </body></html>

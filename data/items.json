@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-03T15:45:45+00:00",
+ "updated": "2026-10-04T01:54:53+00:00",
  "preview": false,
  "items": [
   {
@@ -459,6 +459,78 @@
    "status": "published"
   },
   {
+   "id": "1ee9d0f8d7de",
+   "url": "https://www.youtube.com/watch?v=RIjCfZY2t7U",
+   "title": "Rethinking PoW and Understanding Nexa’s Architecture | Webinar Wednesday",
+   "author": "EvolvH3R",
+   "platform": "youtube",
+   "category": "independent",
+   "kind": "video",
+   "source_name": "YouTube videos about Nexa (YouTube Data API v3)",
+   "published": "2026-07-05T23:27:02+00:00",
+   "summary": "A recording of EvolvH3R's Webinar Wednesday on proof-of-work, in which Bitcoin Unlimited president Andrew Clifford explains Nexa's architecture.",
+   "status": "published",
+   "outlet_note": "EvolvH3R, webinar series that hosts Nexa speakers",
+   "thumb": "thumbs/1ee9d0f8d7de.jpg"
+  },
+  {
+   "id": "484b1630a88b",
+   "url": "https://www.youtube.com/watch?v=v1Nb-_VaMjE",
+   "title": "What is tokedex",
+   "author": "EvolvH3R",
+   "platform": "youtube",
+   "category": "independent",
+   "kind": "video",
+   "source_name": "YouTube videos about Nexa (YouTube Data API v3)",
+   "published": "2026-07-05T22:19:20+00:00",
+   "summary": "A short EvolvH3R clip of Andrew Clifford talking about TokaDex, a planned exchange on Nexa, and the role of proof-of-work.",
+   "status": "published",
+   "outlet_note": "EvolvH3R, webinar series that hosts Nexa speakers",
+   "thumb": "thumbs/484b1630a88b.jpg"
+  },
+  {
+   "id": "d38aec4f9159",
+   "url": "https://www.youtube.com/watch?v=l73QKiNWlFY",
+   "title": "Moving Beyond Centralized Gaming with Nexa blockchain | Webinar Wednesday",
+   "author": "EvolvH3R",
+   "platform": "youtube",
+   "category": "independent",
+   "kind": "video",
+   "source_name": "YouTube search (Data API)",
+   "published": "2026-06-11T12:00:00+00:00",
+   "summary": "EvolvH3R's webinar on gaming with Nexa, where Steven van den Meiracker shows how in-game items can live on chain.",
+   "status": "published",
+   "outlet_note": "EvolvH3R, webinar series that hosts Nexa speakers"
+  },
+  {
+   "id": "e78e16bcb40f",
+   "url": "https://github.com/mazetoken/nexatx",
+   "title": "mazetoken/nexatx: Nexa Blockchain TX Visualizer",
+   "author": "mazetoken",
+   "platform": "github",
+   "category": "independent",
+   "kind": "repo",
+   "source_name": "GitHub repositories mentioning Nexa",
+   "published": "2026-04-03T15:21:18+00:00",
+   "summary": "An open-source tool for visualising Nexa transactions, with a hosted demo on Railway.",
+   "status": "published",
+   "outlet_note": "independent developer on GitHub (mazetoken), not part of the Nexa team"
+  },
+  {
+   "id": "d067a48bf194",
+   "url": "https://github.com/mazetoken/nexaapi",
+   "title": "mazetoken/nexaapi: Nexa Blockchain API",
+   "author": "mazetoken",
+   "platform": "github",
+   "category": "independent",
+   "kind": "repo",
+   "source_name": "GitHub repositories mentioning Nexa",
+   "published": "2026-04-02T17:13:26+00:00",
+   "summary": "An open-source API service for reading data from the Nexa blockchain, with a hosted demo on Railway.",
+   "status": "published",
+   "outlet_note": "independent developer on GitHub (mazetoken), not part of the Nexa team"
+  },
+  {
    "id": "a6ecb37a8b5c",
    "url": "https://nexa.org/articles-database/newsletter-january-2026",
    "title": "Nexa Monthly Newsletter January 2026: The Chapter of Acceleration",
@@ -485,6 +557,21 @@
    "status": "published"
   },
   {
+   "id": "39e505b3419d",
+   "url": "https://www.youtube.com/watch?v=XfrohWi70CY",
+   "title": "Andrew Clifford: President of Bitcoin Unlimited & Nexa | Bitcoin MENA 2025",
+   "author": "Web3 TV",
+   "platform": "youtube",
+   "category": "independent",
+   "kind": "video",
+   "source_name": "YouTube videos about Nexa (YouTube Data API v3)",
+   "published": "2025-12-09T08:18:38+00:00",
+   "summary": "Web3 TV interviews Andrew Clifford about Bitcoin Unlimited and Nexa at Bitcoin MENA 2025 in Abu Dhabi.",
+   "status": "published",
+   "outlet_note": "Web3 TV, crypto video channel",
+   "thumb": "thumbs/39e505b3419d.jpg"
+  },
+  {
    "id": "7e4843513681",
    "url": "https://nexa.org/articles-database/newsletter-november-2025",
    "title": "Nexa Monthly Newsletter November 2025: Ten Years of Bitcoin Unlimited",
@@ -498,6 +585,21 @@
    "status": "published"
   },
   {
+   "id": "1f02411ff6fc",
+   "url": "https://www.youtube.com/watch?v=rKFv_6Bc2VM",
+   "title": "Nexa Presentation Highlight | GameFi Unleashed TOKEN2049",
+   "author": "ALL THINGS BLOCKCHAIN",
+   "platform": "youtube",
+   "category": "independent",
+   "kind": "video",
+   "source_name": "YouTube videos about Nexa (YouTube Data API v3)",
+   "published": "2025-11-26T05:14:53+00:00",
+   "summary": "Highlights from Nexa's talk at the GameFi Unleashed side event during TOKEN2049 Singapore 2025.",
+   "status": "published",
+   "outlet_note": "All Things Blockchain, event video channel",
+   "thumb": "thumbs/1f02411ff6fc.jpg"
+  },
+  {
    "id": "e0d8ca7b4b4f",
    "url": "https://nexa.org/articles-database/newsletter-october-2025",
    "title": "Nexa Monthly Newsletter October 2025: Breaking New Ground by Empowering Builders",
@@ -509,6 +611,36 @@
    "published": "2025-11-01T12:00:00+00:00",
    "summary": "The October newsletter covers Andrew Stone at Boston Blockchain Week, new builder programmes and other community events.",
    "status": "published"
+  },
+  {
+   "id": "483e16f546eb",
+   "url": "https://www.youtube.com/watch?v=HTT5nttXjzQ",
+   "title": "Nexa Native Tokens introduction plus exercise",
+   "author": "Jørgen Svennevik Notland",
+   "platform": "youtube",
+   "category": "independent",
+   "kind": "video",
+   "source_name": "YouTube videos about Nexa (YouTube Data API v3)",
+   "published": "2025-10-12T16:05:07+00:00",
+   "summary": "jQrgen, who runs this site, made a short teaching video on Nexa's native tokens for university lectures, with a follow-up exercise that is free to reuse.",
+   "status": "published",
+   "outlet_note": "jQrgen's personal YouTube channel",
+   "thumb": "thumbs/483e16f546eb.jpg"
+  },
+  {
+   "id": "f18c72f6aaff",
+   "url": "https://www.youtube.com/watch?v=KEpUsboB_Wk",
+   "title": "Andrew Clifford on Nexa at Token 2049 Singapore.",
+   "author": "Nexa India",
+   "platform": "youtube",
+   "category": "independent",
+   "kind": "video",
+   "source_name": "YouTube videos about Nexa (YouTube Data API v3)",
+   "published": "2025-10-11T09:30:18+00:00",
+   "summary": "Andrew Clifford talks to Grafa Crypto News at TOKEN2049 Singapore about how Nexa scales.",
+   "status": "published",
+   "outlet_note": "Nexa India, fan channel reposting a Grafa Crypto News interview",
+   "thumb": "thumbs/f18c72f6aaff.jpg"
   }
  ]
 }
